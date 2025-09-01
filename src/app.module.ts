@@ -1,6 +1,8 @@
+// app.module.ts
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JsonApiModule } from '@klerick/json-api-nestjs';
 import { TypeOrmJsonApiModule } from '@klerick/json-api-nestjs-typeorm';
@@ -8,17 +10,24 @@ import { Users } from './users/users.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'app_user',
-      password: 'secret',
-      database: 'app_db',
-      entities: [Users],
-      synchronize: false, // set to fales in production
-      logging: false,
+    ConfigModule.forRoot({ isGlobal: true }),
+
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get<string>('DB_HOST'),
+        port: config.get<number>('DB_PORT'),
+        username: config.get<string>('DB_USER'),
+        password: config.get<string>('DB_PASS'),
+        database: config.get<string>('DB_NAME'),
+        entities: [Users],
+        synchronize: false,
+        logging: false,
+      }),
     }),
+
     JsonApiModule.forRoot(TypeOrmJsonApiModule, {
       entities: [Users],
       options: {

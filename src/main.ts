@@ -2,8 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
+import { NestExpressApplication } from '@nestjs/platform-express';
+
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // specify that im using expressjs
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // use expressjs  extended query parser which converts bracket notation into nested objects
+  app.set('query parser', 'extended');
 
   const config = new DocumentBuilder()
     .setTitle('TypeORM Sandbox')

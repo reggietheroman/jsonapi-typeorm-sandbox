@@ -2,7 +2,11 @@
 
 This project uses [Nest](https://github.com/nestjs/nest) and is a sandbox for typeORM as well as nestjs/json-api.
 
-Typeorm, nestjs/typeorm, nestjs-json-api and nestjs-json-api-typeorm.
+Typeorm, @nestjs/typeorm, nestjs-json-api and nestjs-json-api-typeorm.
+
+@nestjs/swagger is included for API documentation.
+
+@nestjs/config is included for .env variables.
 
 ## Project setup
 
